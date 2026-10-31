@@ -79,7 +79,7 @@ function Icon({ name, size = 18, className = '', strokeWidth = 2 }) {
 }
 
 /* ---------- Estados ---------- */
-const E_HOME = 'Disponible en casa', E_WAY = 'En camino (SmartBox CR)', E_PARTNER = 'En posesión de socio', E_LOAN = 'Prestado / Uso compartido', E_REV = 'Requiere revisión', E_SOLD = 'Vendido / Baja';
+const E_HOME = 'Disponible en casa', E_WAY = 'En camino', E_PARTNER = 'En posesión de socio', E_LOAN = 'Prestado / Uso compartido', E_REV = 'Requiere revisión', E_SOLD = 'Vendido / Baja';
 const ESTADOS = [E_HOME, E_WAY, E_PARTNER, E_LOAN, E_REV, E_SOLD];
 const ESTADO_UI = {
   [E_HOME]: { chip: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40', dot: 'bg-emerald-400', sel: 'border-emerald-500/60 text-emerald-200' },
@@ -91,55 +91,13 @@ const ESTADO_UI = {
 };
 const ui = (e) => ESTADO_UI[e] || ESTADO_UI[E_HOME];
 
-/* ---------- Datos de fábrica ---------- */
-const P100 = 'Propio (100% Tai)';
-const eq = (n, categoria, nombre, marca, modelo, cantidad, specs, estado, propiedad, notas, mant) => ({ id: 'EQ-' + String(n).padStart(3, '0'), categoria, nombre, marca, modelo, cantidad, specs, estado, propiedad, notas, mant: mant || '' });
+/* ---------- Categorías de ejemplo (la lista real es editable y vive en db.categorias) ---------- */
 const C1 = '1. Cámara y Rigging', C2 = '2. Óptica y Filtros', C3 = '3. Almacenamiento', C4 = '4. Monitoreo', C5 = '5. Alimentación y Baterías', C6 = '6. Estabilización y Soporte', C7 = '7. Iluminación y Modificadores', C8 = '8. Dispositivos y Postproducción';
-const CATEGORIAS = [C1, C2, C3, C4, C5, C6, C7, C8];
-const SEED = [
-  eq(1, C1, 'Cámara de Cine Digital', 'Blackmagic Design', 'Pocket Cinema Camera 4K (BMPCC 4K)', 1, 'Sensor MFT 4/3, BRAW/ProRes, entrada Weipu SF6 2 pines (12V)', E_HOME, P100, 'Cámara principal de rodaje.'),
-  eq(2, C1, 'Jaula Completa (Full Cage)', 'SmallRig', 'Full Cage para BMPCC 4K/6K (2203)', 1, 'Rieles NATO integrados, roscas 1/4"-20 y 3/8"-16 ARRI', E_HOME, P100, 'Instalada en la BMPCC 4K.'),
-  eq(3, C1, 'Asa Superior (Top Handle)', 'SmallRig', 'NATO Top Handle (HTN2439 / 1955)', 1, 'Acople rápido a riel NATO de la jaula, zapata fría', E_HOME, P100, 'Se monta en el riel superior de la jaula.'),
-  eq(4, C1, 'Adaptador Óptico / Speedbooster', 'Viltrox', 'EF-M2 II (0.71x)', 1, 'Montura Canon EF a Micro 4/3, reductor focal 0.71x, +1 paso de luz', E_HOME, P100, 'Adapta los lentes Rokinon EF a la BMPCC 4K.'),
-  eq(5, C1, 'Placa Base con Abrazadera LWS', 'SmallRig', 'Baseplate para rieles LWS de 15mm (1674)', 1, 'Soporte estándar LWS 15mm con bloqueo doble', E_WAY, P100, 'Pedido en Amazon vía casillero SmartBox CR.'),
-  eq(6, C1, 'Par de Varillas (Rods) de 15mm', 'SmallRig', '15mm Aluminum Alloy Rods 12" / 30cm (1053)', 2, 'Aluminio negro, 15mm diámetro, 30 cm largo, rosca hembra M12', E_WAY, P100, 'Paquete de 2 varillas. En camino vía SmartBox CR.'),
-  eq(7, C2, 'Lente Cine Gran Angular 24mm', 'Rokinon', 'Cine DS 24mm T1.5 ED AS IF UMC', 1, 'Montura EF, T1.5-T22, engranajes 0.8 MOD, rosca frontal 77mm', E_HOME, P100, 'Set principal de óptica de cine.'),
-  eq(8, C2, 'Lente Cine Angular Estándar 35mm', 'Rokinon', 'Cine DS 35mm T1.5 AS UMC', 1, 'Montura EF, T1.5-T22, engranajes 0.8 MOD, rosca frontal 77mm', E_HOME, P100, 'Set principal de óptica de cine.'),
-  eq(9, C2, 'Lente Cine Estándar 50mm', 'Rokinon', 'Cine DS 50mm T1.5 AS UMC', 1, 'Montura EF, T1.5-T22, engranajes 0.8 MOD, rosca frontal 77mm', E_HOME, P100, 'Set principal de óptica de cine.'),
-  eq(10, C2, 'Lente Cine Telefoto Corto 85mm', 'Rokinon', 'Cine DS 85mm T1.5 AS IF UMC', 1, 'Montura EF, T1.5-T22, engranajes 0.8 MOD, rosca frontal 72mm', E_HOME, P100, 'Set principal (requiere step-up ring 72-77mm para el ND).'),
-  eq(11, C2, 'Filtro de Densidad Neutra Variable', 'K&F Concept', 'Nano-C Series Variable ND2-400 (77mm)', 1, 'Diámetro 77mm, reducción de 1 a 9 pasos (ND2 a ND400)', E_HOME, P100, 'Calza directo en el 24mm, 35mm y 50mm.'),
-  eq(12, C3, 'Tarjeta de Memoria SDXC', 'Kingston', 'Canvas Go! Plus 128GB SDXC UHS-I U3 V30', 1, '128GB, hasta 170MB/s lectura, V30 / U3', E_HOME, P100, 'Almacenamiento interno para cámara.'),
-  eq(13, C4, 'Monitor de Campo Táctil 5.2"', 'Portkeys', 'PT6 Camera Field Monitor 5.2"', 1, 'Táctil 5.2", 600 nits, 3D LUT output, RGB Waveform, Peaking', E_WAY, P100, 'Pedido en Amazon vía SmartBox CR.'),
-  eq(14, C5, 'Placa Adaptadora para Baterías NP-F', 'SmallRig', 'NP-F Battery Adapter Plate (Kit EB2698 / Placa EB2504)', 1, 'Aluminio. 2 salidas DC: 12V (DC 5.5/2.5mm) y 7.4V (DC 5.5/2.1mm). Botón con 3 LEDs amarillos y 1 LED azul', E_HOME, P100, 'Parpadea al <10% de batería.'),
-  eq(15, C5, 'Placa de Montaje V-Mount', 'Genérica', 'V-Lock Battery Mounting Plate con Clamp 15mm', 1, 'Cheeseplate con múltiples roscas 1/4" y 3/8" y abrazadera para rieles de 15mm', E_HOME, P100, 'Para montar batería V-Mount en rieles.'),
-  eq(16, C5, 'Batería de Cine V-Mount', 'Neewer', 'BP-150WS Rechargeable Li-ion V-Mount', 1, '14.8V, 10400mAh, 150Wh, D-Tap y salida USB 5V/2.1A', E_HOME, P100, 'Rotulada "Tai". Alimentación principal de larga duración.'),
-  eq(17, C5, 'Batería Serie L Alta Capacidad (NP-F970)', 'Powerextra', 'NP-F960 / NP-F970 Li-ion', 1, '7.4V, 8800mAh, 65.12Wh', E_HOME, P100, 'Ideal para placa SmallRig EB2698 o monitor.'),
-  eq(18, C5, 'Baterías Serie L Mediana Capacidad (NP-F570)', 'Genérica', 'NP-F550 / NP-F570 Battery Pack', 2, '7.4V, 2200mAh, 16.3Wh (cada una)', E_HOME, P100, '2 unidades disponibles en casa.'),
-  eq(19, C5, 'Batería Serie L Compacta (NP-F550)', 'Portkeys', 'NP-F550 Battery (Incluida con Monitor PT6)', 1, '7.4V, serie L estándar para monitor', E_WAY, P100, 'Viene con el monitor Portkeys PT6.'),
-  eq(20, C5, 'Cable DC a Weipu 2 Pines', 'SmallRig', 'Cable DC 5.5/2.5mm a Weipu SF6 2-Pin (Kit EB2698)', 1, 'Conecta salida 12V de placa SmallRig EB2698 a puerto lateral BMPCC 4K', E_HOME, P100, 'Permite hot-swap dejando batería LP-E6 interna.'),
-  eq(21, C5, 'Acoplador DC (Dummy Battery LP-E6N)', 'SmallRig', 'DC Coupler DR-E6 para LP-E6N (Kit EB2698)', 1, 'Cable en espiral con barril 5.5/2.1mm (va al puerto 7.4V de placa EB2698)', E_HOME, P100, 'Batería falsa para compartimento inferior.'),
-  eq(22, C5, 'Cable D-Tap a Weipu 2 Pines (Enrollado)', 'WildFair', 'BMPCC 4K/6K Coiled D-Tap to Weipu SF6 2-Pin', 1, 'D-Tap macho a Weipu SF6 hembra de 2 pines en espiral', E_WAY, P100, 'Para alimentar la cámara desde la V-Mount Neewer.'),
-  eq(23, C5, 'Cargador de Pared AC para BMPCC 4K', 'Blackmagic Design', 'Fuente AC Original a Weipu SF6 2 Pines', 1, '110-240V AC a 12V DC con conector Weipu de 2 pines con bloqueo', E_HOME, P100, 'Cargador de pared original de la cámara.'),
-  eq(24, C5, 'Cargador Doble USB para NP-F', 'Genérico', 'Dual USB Charger Modelo CC-001', 1, 'Entrada Micro USB 5V/2A; Salida 8.4V 800mA(x1) / 550mA(x2)', E_HOME, P100, 'Carga 2 baterías NP-F a la vez.'),
-  eq(25, C5, 'Cargador Individual Serie L', 'Powerextra', 'Cargador de Pared AC para NP-F550/750/960', 1, 'Indicador LED de carga, enchufe directo', E_HOME, P100, 'Cargador individual serie L.'),
-  eq(26, C6, 'Gimbal Estabilizador de 3 Ejes', 'Zhiyun', 'Crane 2S', 1, 'Motores de alto torque para cámaras de cine, pantalla OLED', E_REV, P100, 'Funciona al 100%, pero falta cable largo USB a USB-C para el cargador y tiene 1 tornillo ligeramente doblado por caída (rosca bien).', 'Comprar cable largo USB a USB-C para el cargador.\nRevisar tornillo ligeramente doblado por caída.'),
-  eq(27, C6, 'Trípode con Cabezal de Bola', 'K&F Concept', 'Trípode Fotográfico con Cabezal BH-28L', 1, 'Cabezal de bola metálico BH-28L con paneo 360°, cierres flip-lock', E_HOME, P100, 'Ideal para tomas fijas o soporte secundario.'),
-  eq(28, C7, 'Foco COB LED Bicolor', 'Neewer', 'CB300B / 300B (300W Bicolor)', 1, '300W, bicolor (2700K-6500K), montura Bowens', E_PARTNER, 'Copropiedad (50% Tai / 50% Mario Chinchilla)', 'Comprada a medias con Mario Chinchilla. Actualmente la tiene Mario.'),
-  eq(29, C7, 'Reflector Plegable (Flex)', 'Godox', 'Reflector Circular Plegable 5 en 1 (Mediano/Grande)', 1, 'Superficies de rebote/difusión/negro con funda', E_HOME, P100, 'Claqueta de referencia pertenece a Sofi (disponible como préstamo).'),
-  eq(30, C8, 'Estación de Trabajo Portátil', 'HP', 'ZBook 15 G5 Mobile Workstation', 1, '40 GB RAM, GPU dedicada NVIDIA Quadro P2000', E_LOAN, 'Préstamo familiar (Hipatia)', 'Prestada por mi hermana Hipatia. Usar GPU en Alto Rendimiento para Premiere/After Effects.'),
-  eq(31, C8, 'Teléfono Inteligente', 'Apple', 'iPhone 11', 1, 'Cámara dual, monitoreo auxiliar y scouting', E_REV, P100, 'Batería por debajo del 75% (se planea cambio a futuro).', 'Revisar batería (por debajo del 75%). Planear cambio a futuro.'),
-];
-const SEED_LOANS = [{ id: 'PR-001', nombre: 'Claqueta de Cine Acrílica', dueno: 'Sofi', notas: 'Pertenece a mi novia Sofi. Se puede incluir de forma opcional en los rodajes.' }];
-const DEFAULT_KITS = [
-  { id: 'rig', nombre: 'Kit Rig BMPCC 4K + V-Mount', icon: 'Camera', ids: ['EQ-001', 'EQ-002', 'EQ-003', 'EQ-004', 'EQ-005', 'EQ-006', 'EQ-015', 'EQ-016', 'EQ-022'] },
-  { id: 'npf', nombre: 'Kit Alimentación Ligera NP-F', icon: 'Zap', ids: ['EQ-014', 'EQ-017', 'EQ-018', 'EQ-024', 'EQ-025', 'EQ-020'] },
-  { id: 'optica', nombre: 'Set Completo Óptica Rokinon + ND', icon: 'Film', ids: ['EQ-007', 'EQ-008', 'EQ-009', 'EQ-010', 'EQ-011'] },
-];
+const CATEGORIAS_BASE = [C1, C2, C3, C4, C5, C6, C7, C8];
 const KIT_ICONS = ['Package', 'Camera', 'Zap', 'Film', 'Aperture', 'Mic', 'Lightbulb', 'Monitor', 'Battery', 'HardDrive', 'Briefcase', 'Star'];
-const defaultKits = () => DEFAULT_KITS.map((k) => ({ ...k, ids: [...k.ids] }));
 // Respaldos antiguos sin "kits" reciben los kits de fábrica; nunca se tocan inventario ni proyectos.
 function normalizeKits(raw) {
-  if (!Array.isArray(raw)) return defaultKits();
+  if (!Array.isArray(raw)) return [];
   const seen = new Set();
   return raw.filter((k) => k && typeof k === 'object').map((k) => {
     let id = String(k.id || '') || 'KIT-' + uid();
@@ -148,10 +106,13 @@ function normalizeKits(raw) {
     return { id, nombre: String(k.nombre || 'Kit sin nombre'), icon: typeof k.icon === 'string' && k.icon ? k.icon : 'Package', ids: uniq(Array.isArray(k.ids) ? k.ids.map(String) : []) };
   });
 }
-const freshDb = () => normalizeDb({ inventory: SEED.map((x) => ({ ...x })), projects: [], loans: SEED_LOANS.map((x) => ({ ...x })), personas: [], casas: [], kits: defaultKits() });
+// Versión en blanco: sin equipos, proyectos, préstamos ni kits. Solo trae categorías de ejemplo (editables).
+const freshDb = () => normalizeDb({ inventory: [], projects: [], loans: [], personas: [], casas: [], kits: [], categorias: CATEGORIAS_BASE.slice(), yo: '' });
 
 function normalizeDb(d) {
   if (!d || !Array.isArray(d.inventory) || !Array.isArray(d.projects)) return null;
+  // Migración: el estado antiguo "En camino (SmartBox CR)" ahora es solo "En camino" (en inventario y proyectos).
+  try { if (JSON.stringify(d).includes('En camino (SmartBox CR)')) d = JSON.parse(JSON.stringify(d).split('En camino (SmartBox CR)').join('En camino')); } catch (e) { /* se usa tal cual */ }
   const inventory = d.inventory.map((i) => {
     const it = { mant: '', specs: '', notas: '', cantidad: 1, foto: '', ...i };
     if (!it.tipoProp || !Array.isArray(it.duenos) || !it.duenos.length) Object.assign(it, parsePropiedad(it.propiedad));
@@ -160,10 +121,15 @@ function normalizeDb(d) {
   });
   const loans = Array.isArray(d.loans) ? d.loans : [];
   const projects = d.projects.map((p) => ({ seleccion: {}, prep: {}, wrap: {}, estado: 'Activo', flagged: {}, renta: [], ...p }));
-  const personas = uniqNames([...(Array.isArray(d.personas) ? d.personas : []), 'Tai', ...inventory.flatMap((i) => i.duenos.map((x) => x.nombre)), ...loans.map((l) => l.dueno)]);
+  // Datos antiguos (sin campo "yo") eran de Tai: se conserva ese nombre para que nada cambie.
+  const yo = typeof d.yo === 'string' ? d.yo.replace(/\s+/g, ' ').trim() : 'Tai';
+  const personas = uniqNames([...(Array.isArray(d.personas) ? d.personas : []), yo, ...inventory.flatMap((i) => i.duenos.map((x) => x.nombre)), ...loans.map((l) => l.dueno)]);
   const casas = uniqNames([...(Array.isArray(d.casas) ? d.casas : []), ...projects.flatMap((p) => (p.renta || []).map((r) => r.casa))]);
   const kits = normalizeKits(d.kits);
-  return { inventory, projects, loans, personas, casas, kits };
+  // Categorías: si el dato es antiguo (sin lista) se usan las 8 de siempre; además nunca se pierde una categoría que algún equipo use.
+  const base = Array.isArray(d.categorias) ? d.categorias : CATEGORIAS_BASE;
+  const categorias = uniqNames([...base.map((c) => String(c || '')), ...(Array.isArray(d.categorias) ? [] : inventory.map((i) => i.categoria))]);
+  return { inventory, projects, loans, personas, casas, kits, categorias, yo };
 }
 function loadDb() {
   try {
@@ -174,9 +140,11 @@ function loadDb() {
 }
 
 /* ---------- Nube (Firebase): utilidades ---------- */
+/* Hub: pon aquí la dirección de tu página principal. required:true obliga a iniciar sesión en el hub. */
+const HUB = { url: 'https://lopsar.github.io/LOPsarHub/', required: false, name: 'Hub' };
 const DEVICE_KEY = KEY + '.device';
 const DEVICE = (() => { try { let d = localStorage.getItem(DEVICE_KEY); if (!d) { d = 'dev-' + uid() + uid(); localStorage.setItem(DEVICE_KEY, d); } return d; } catch (e) { return 'dev-' + uid() + uid(); } })();
-const coreDb = (d) => ({ inventory: d.inventory, projects: d.projects, loans: d.loans, personas: d.personas, casas: d.casas, kits: d.kits });
+const coreDb = (d) => ({ inventory: d.inventory, projects: d.projects, loans: d.loans, personas: d.personas, casas: d.casas, kits: d.kits, categorias: d.categorias, yo: d.yo });
 // Firestore devuelve los mapas con otro orden de claves; se compara con claves ordenadas.
 const stable = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x) ? Object.keys(x).sort().reduce((o, kk) => { o[kk] = x[kk]; return o; }, {}) : x));
 function authMsg(e) {
@@ -187,6 +155,10 @@ function authMsg(e) {
   if (['auth/invalid-credential', 'auth/wrong-password', 'auth/user-not-found', 'auth/invalid-login-credentials'].includes(c)) return 'Correo o contraseña incorrectos.';
   if (c === 'auth/too-many-requests') return 'Demasiados intentos. Espera unos minutos e inténtalo otra vez.';
   if (c === 'auth/network-request-failed') return 'Sin conexión. Revisa tu internet.';
+  if (c === 'auth/unauthorized-domain') return 'Este dominio no está autorizado en Firebase (Authentication → Configuración → Dominios autorizados).';
+  if (c === 'auth/popup-closed-by-user' || c === 'auth/cancelled-popup-request') return '';
+  if (c === 'auth/popup-blocked') return 'El navegador bloqueó la ventana de Google. Permite las ventanas emergentes e inténtalo otra vez.';
+  if (c === 'auth/account-exists-with-different-credential') return 'Ese correo ya existe con otro método de acceso. Entra con tu correo y contraseña.';
   if (c === 'auth/operation-not-allowed') return 'El acceso con correo y contraseña no está activado en Firebase (Authentication → Método de acceso).';
   return 'No se pudo completar' + (c ? ' (' + c + ')' : '') + '.';
 }
@@ -202,7 +174,8 @@ function cloudMsg(e) {
 /* ---------- Lógica de dominio ---------- */
 const esCopropiedad = (it) => /copropiedad/i.test(it.propiedad || '');
 const esPrestamoRecibido = (it) => /^pr[eé]stamo/i.test(it.propiedad || '');
-const socioDe = (it) => { const o = (it.duenos || []).find((x) => normName(x.nombre) !== 'tai'); return o ? o.nombre : 'Socio'; };
+let ME = 'Tai'; // nombre del dueño de la cuenta (db.yo); se actualiza en App
+const socioDe = (it) => { const o = (it.duenos || []).find((x) => normName(x.nombre) !== normName(ME)); return o ? o.nombre : 'Socio'; };
 const primerNombre = (s) => String(s).split(' ')[0];
 const loanAsItem = (l) => ({ id: l.id, categoria: '9. Préstamos de terceros', nombre: l.nombre, marca: 'Prestada por ' + l.dueno, modelo: '', cantidad: 1, specs: '', estado: E_LOAN, propiedad: 'Préstamo (' + l.dueno + ')', notas: l.notas || '', mant: '', _loan: true });
 const nextId = (inv) => 'EQ-' + String(inv.reduce((m, i) => Math.max(m, parseInt(String(i.id).replace(/\D/g, ''), 10) || 0), 0) + 1).padStart(3, '0');
@@ -237,7 +210,7 @@ function progress(p, db) {
 const pct = (a, b) => (b ? Math.round((a / b) * 100) : 0);
 
 function aviso(it) {
-  if (it.estado === E_WAY) return { tone: 'blue', text: '¡Ojo! Todavía en camino por SmartBox CR. Confirma que llegue antes del rodaje.' };
+  if (it.estado === E_WAY) return { tone: 'blue', text: '¡Ojo! Todavía en camino. Confirma que llegue antes del rodaje.' };
   if (it.estado === E_PARTNER) {
     const n = esCopropiedad(it) ? primerNombre(socioDe(it)) : 'tu socio';
     return { tone: 'amber', text: '¡Ojo! Coordinar con ' + n + ' para pedirle ' + it.nombre + ' (' + it.marca + ').' };
@@ -370,7 +343,7 @@ const propString = (tipo, duenos) => {
   const d = duenos || [];
   if (tipo === 'copro') return 'Copropiedad (' + d.map((x) => x.pct + '% ' + x.nombre).join(' / ') + ')';
   if (tipo === 'prestamo') return 'Préstamo (' + (d[0] ? d[0].nombre : '') + ')';
-  return 'Propio (100% ' + (d[0] ? d[0].nombre : 'Tai') + ')';
+  return 'Propio (100% ' + (d[0] ? d[0].nombre : '') + ')';
 };
 function parsePropiedad(str) {
   const s = String(str || '');
@@ -384,7 +357,7 @@ function parsePropiedad(str) {
     return { tipoProp: 'prestamo', duenos: [{ nombre: n, pct: 100 }] };
   }
   const m = s.match(/\(100%\s*(.+)\)/);
-  return { tipoProp: 'propio', duenos: [{ nombre: m ? m[1].trim() : 'Tai', pct: 100 }] };
+  return { tipoProp: 'propio', duenos: [{ nombre: m ? m[1].trim() : '', pct: 100 }] };
 }
 
 function compressImage(file, max) {
@@ -455,18 +428,18 @@ function NamePicker({ id, value, options, onChange, onAdd, exclude, placeholder 
 function ItemForm({ db, item, onClose, A, showToast }) {
   const isNew = !item;
   const [f, setF] = useState(() => item
-    ? { ...item, cantidad: String(item.cantidad), tipoProp: item.tipoProp || 'propio', duenos: (item.duenos && item.duenos.length ? item.duenos : [{ nombre: 'Tai', pct: 100 }]).map((d) => ({ ...d })) }
-    : { id: nextId(db.inventory), categoria: '', nombre: '', marca: '', modelo: '', cantidad: '1', specs: '', estado: E_HOME, tipoProp: 'propio', duenos: [{ nombre: 'Tai', pct: 100 }], notas: '', mant: '', foto: '' });
+    ? { ...item, cantidad: String(item.cantidad), tipoProp: item.tipoProp || 'propio', duenos: (item.duenos && item.duenos.length ? item.duenos : [{ nombre: db.yo || '', pct: 100 }]).map((d) => ({ ...d })) }
+    : { id: nextId(db.inventory), categoria: '', nombre: '', marca: '', modelo: '', cantidad: '1', specs: '', estado: E_HOME, tipoProp: 'propio', duenos: [{ nombre: db.yo || '', pct: 100 }], notas: '', mant: '', foto: '' });
   const [err, setErr] = useState('');
   const [busyFoto, setBusyFoto] = useState(false);
-  const cats = item && item.categoria && !CATEGORIAS.includes(item.categoria) ? [...CATEGORIAS, item.categoria] : CATEGORIAS;
+  const cats = item && item.categoria && !db.categorias.includes(item.categoria) ? [...db.categorias, item.categoria] : db.categorias;
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
 
   const setTipo = (t) => {
     const first = (f.duenos[0] && f.duenos[0].nombre) || '';
-    if (t === 'copro') setF({ ...f, tipoProp: t, duenos: [{ nombre: first || 'Tai', pct: 50 }, { nombre: '', pct: 50 }] });
-    else if (t === 'prestamo') setF({ ...f, tipoProp: t, duenos: [{ nombre: first === 'Tai' ? '' : first, pct: 100 }] });
-    else setF({ ...f, tipoProp: t, duenos: [{ nombre: first || 'Tai', pct: 100 }] });
+    if (t === 'copro') setF({ ...f, tipoProp: t, duenos: [{ nombre: first || db.yo || '', pct: 50 }, { nombre: '', pct: 50 }] });
+    else if (t === 'prestamo') setF({ ...f, tipoProp: t, duenos: [{ nombre: normName(first) === normName(db.yo) ? '' : first, pct: 100 }] });
+    else setF({ ...f, tipoProp: t, duenos: [{ nombre: first || db.yo || '', pct: 100 }] });
   };
   const setDueno = (i, patch) => setF((c) => ({ ...c, duenos: c.duenos.map((d, j) => (j === i ? { ...d, ...patch } : d)) }));
   const addDueno = () => setF((c) => ({ ...c, duenos: [...c.duenos, { nombre: '', pct: 0 }] }));
@@ -584,7 +557,7 @@ function RentalForm({ db, A, rental, onClose, onSave }) {
     <form onSubmit=${submit} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div className="sm:col-span-2"><${Field} id="r-casa" label="Casa de renta"><${NamePicker} id="r-casa" value=${f.casa} options=${db.casas} onChange=${(v) => setF((c) => ({ ...c, casa: v }))} onAdd=${A.addCasa} placeholder="Elige la casa de renta" /><//></div>
       <div className="sm:col-span-2"><${Field} id="r-nombre" label="Equipo"><input id="r-nombre" autoFocus className=${INPUT} value=${f.nombre} onChange=${set('nombre')} placeholder="Ej. Lente Cooke S4 50mm" /><//></div>
-      <${Field} id="r-cat" label="Categoría"><select id="r-cat" className=${INPUT} value=${f.categoria} onChange=${set('categoria')}><option value="" disabled>Elige una categoría</option>${CATEGORIAS.map((c) => html`<option key=${c} value=${c}>${c}</option>`)}</select><//>
+      <${Field} id="r-cat" label="Categoría"><select id="r-cat" className=${INPUT} value=${f.categoria} onChange=${set('categoria')}><option value="" disabled>Elige una categoría</option>${db.categorias.map((c) => html`<option key=${c} value=${c}>${c}</option>`)}</select><//>
       <${Field} id="r-cant" label="Cantidad"><input id="r-cant" type="number" min="1" inputMode="numeric" className=${INPUT} value=${f.cantidad} onChange=${set('cantidad')} /><//>
       <${Field} id="r-marca" label="Marca"><input id="r-marca" className=${INPUT} value=${f.marca} onChange=${set('marca')} /><//>
       <${Field} id="r-modelo" label="Modelo"><input id="r-modelo" className=${INPUT} value=${f.modelo} onChange=${set('modelo')} /><//>
@@ -647,7 +620,7 @@ function Dashboard({ db, A, go, openProject, openEdit, setFilters, showToast }) 
   const kpis = [
     { label: 'Equipos registrados', n: vivos.length, sub: inv.length - vivos.length ? (inv.length - vivos.length) + ' dados de baja' : 'en inventario', dot: 'bg-slate-300', filter: '', span: true },
     { label: 'Disponibles en casa', n: count(E_HOME), sub: 'listos para salir', dot: 'bg-emerald-400', filter: E_HOME },
-    { label: 'En camino', n: count(E_WAY), sub: 'SmartBox CR', dot: 'bg-blue-400', filter: E_WAY },
+    { label: 'En camino', n: count(E_WAY), sub: 'Por llegar', dot: 'bg-blue-400', filter: E_WAY },
     { label: 'Con socio o compartidos', n: compartidos, sub: 'por coordinar', dot: 'bg-amber-400', filter: E_PARTNER },
     { label: 'Requieren revisión', n: count(E_REV), sub: 'antes del próximo rodaje', dot: 'bg-red-400', filter: E_REV },
   ];
@@ -723,7 +696,7 @@ function Dashboard({ db, A, go, openProject, openEdit, setFilters, showToast }) 
             <div className="text-xs text-slate-500">${it.propiedad}</div>
             <div className="lbl mt-3 mb-1.5">¿Quién la tiene hoy?</div>
             <div className="grid grid-cols-2 gap-2">
-              <button onClick=${() => A.setHolder(it.id, 'tai')} aria-pressed=${!conSocio} className=${cn('min-h-[48px] rounded-md border-2 font-semibold', !conSocio ? 'border-emerald-500 bg-emerald-500 text-slate-950' : 'border-slate-600 text-slate-300 hover:bg-slate-700/60')}>Tai</button>
+              <button onClick=${() => A.setHolder(it.id, 'tai')} aria-pressed=${!conSocio} className=${cn('min-h-[48px] rounded-md border-2 font-semibold', !conSocio ? 'border-emerald-500 bg-emerald-500 text-slate-950' : 'border-slate-600 text-slate-300 hover:bg-slate-700/60')}>${db.yo ? primerNombre(db.yo) : 'Yo'}</button>
               <button onClick=${() => A.setHolder(it.id, 'socio')} aria-pressed=${conSocio} className=${cn('min-h-[48px] rounded-md border-2 font-semibold', conSocio ? 'border-amber-500 bg-amber-500 text-slate-950' : 'border-slate-600 text-slate-300 hover:bg-slate-700/60')}>${socio}</button>
             </div>
           </li>`; })}</ul>`}
@@ -743,8 +716,45 @@ function Dashboard({ db, A, go, openProject, openEdit, setFilters, showToast }) 
   </div>`;
 }
 
+
+/* ---------- Categorías editables ---------- */
+function CategoriesManager({ db, A, showToast, onClose }) {
+  const [nueva, setNueva] = useState('');
+  const [edit, setEdit] = useState(null);      // { old, val }
+  const [confirmDel, setConfirmDel] = useState(null);
+  const n = (c) => db.inventory.filter((i) => i.categoria === c).length;
+  const orphans = uniq(db.inventory.map((i) => i.categoria)).filter((c) => c && !db.categorias.includes(c));
+  const add = (e) => {
+    e.preventDefault();
+    const c = nueva.replace(/\s+/g, ' ').trim();
+    if (!c) return;
+    if (db.categorias.some((x) => normName(x) === normName(c))) return showToast('Esa categoría ya existe');
+    A.addCategoria(c); setNueva(''); showToast('Categoría agregada: ' + c);
+  };
+  const saveRename = () => {
+    const c = edit.val.replace(/\s+/g, ' ').trim();
+    if (!c) return;
+    if (db.categorias.some((x) => x !== edit.old && normName(x) === normName(c))) return showToast('Ya existe una categoría con ese nombre');
+    A.renameCategoria(edit.old, c); setEdit(null); showToast('Categoría renombrada');
+  };
+  return html`<${Modal} title="Categorías de equipo" onClose=${onClose}>
+    <p className="mb-4 text-sm text-slate-400">Agrega, renombra o elimina categorías. Al renombrar, los equipos de esa categoría se actualizan solos. Si eliminas una categoría que tiene equipos, ellos no se borran: conservan su categoría y puedes reasignarlos al editarlos. Sugerencia: empieza el nombre con un número (“9. Audio”) para mantener el orden.</p>
+    <ul className="mb-4 flex flex-col gap-2">${db.categorias.map((c) => html`<li key=${c} className="rounded-md border border-slate-700 bg-slate-900 p-3">
+      ${edit && edit.old === c ? html`<div className="flex flex-wrap items-center gap-2"><input aria-label="Nuevo nombre" autoFocus className=${cn(INPUT, 'min-w-0 flex-1')} value=${edit.val} onChange=${(e) => setEdit({ old: c, val: e.target.value })} onKeyDown=${(e) => { if (e.key === 'Enter') { e.preventDefault(); saveRename(); } }} /><button onClick=${saveRename} className=${cn(B_PRIMARY, '!min-h-[40px] text-sm')}>Guardar</button><button onClick=${() => setEdit(null)} className=${cn(B_GHOST, '!min-h-[40px] text-sm')}>Cancelar</button></div>`
+      : html`<div className="flex flex-wrap items-center gap-3"><div className="min-w-0 flex-1"><div className="font-semibold">${c}</div><div className="text-xs text-slate-400">${n(c)} equipo${n(c) === 1 ? '' : 's'}</div></div>
+        <button onClick=${() => setEdit({ old: c, val: c })} aria-label=${'Renombrar ' + c} className=${cn(B_GHOST, '!min-h-[40px] text-sm')}><${Icon} name="Pencil" size=${16} />Renombrar</button>
+        <button onClick=${() => setConfirmDel(c)} aria-label=${'Eliminar ' + c} className=${cn(B_DANGER, '!min-h-[40px] text-sm')}><${Icon} name="Trash2" size=${16} /></button></div>`}
+      ${confirmDel === c && html`<div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-red-200">${n(c) ? '¿Eliminar la categoría? Sus ' + n(c) + ' equipos se conservan.' : '¿Eliminar esta categoría?'} <button onClick=${() => { A.deleteCategoria(c); setConfirmDel(null); showToast('Categoría eliminada'); }} className=${cn(B_DANGER, '!min-h-[40px] text-sm')}>Sí, eliminar</button><button onClick=${() => setConfirmDel(null)} className=${cn(B_GHOST, '!min-h-[40px] text-sm')}>No</button></div>`}
+    </li>`)}</ul>
+    ${db.categorias.length === 0 && html`<p className="mb-4 text-sm text-slate-400">No hay categorías. Agrega la primera abajo.</p>`}
+    ${orphans.length > 0 && html`<p className="mb-4 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">Equipos con categoría que ya no está en la lista: ${orphans.join(', ')}. Se conservan; edítalos para moverlos a otra categoría.</p>`}
+    <form onSubmit=${add} className="flex flex-wrap gap-2 border-t border-slate-700 pt-4"><input aria-label="Nueva categoría" className=${cn(INPUT, 'min-w-0 flex-1')} placeholder="Nueva categoría (ej. 9. Audio)" value=${nueva} onChange=${(e) => setNueva(e.target.value)} /><button type="submit" className=${B_PRIMARY}><${Icon} name="Plus" size=${16} />Agregar</button></form>
+  <//>`;
+}
+
 /* ---------- INVENTARIO ---------- */
 function Inventory({ db, filters, setFilters, A, showToast, edit, setEdit }) {
+  const [catsOpen, setCatsOpen] = useState(false);
   const [mode, setMode] = useState(() => (window.innerWidth >= 1024 ? 'table' : 'cards'));
   const [confirmDel, setConfirmDel] = useState(null);
   const cats = useMemo(() => uniq(db.inventory.map((i) => i.categoria)).sort(numCmp), [db.inventory]);
@@ -769,7 +779,8 @@ function Inventory({ db, filters, setFilters, A, showToast, edit, setEdit }) {
   const EditBtn = ({ it }) => html`<button aria-label=${'Editar ' + it.id} onClick=${() => setEdit(it)} className="flex h-11 w-11 items-center justify-center rounded-md text-slate-300 hover:bg-slate-700"><${Icon} name="Pencil" size=${17} /></button>`;
 
   return html`<div>
-    <${PageTitle} eyebrow=${list.length + ' de ' + db.inventory.length + ' equipos'} title="Inventario maestro" right=${html`<button className=${B_PRIMARY} onClick=${() => setEdit('new')}><${Icon} name="Plus" />Agregar equipo</button>`} />
+    <${PageTitle} eyebrow=${list.length + ' de ' + db.inventory.length + ' equipos'} title="Inventario maestro" right=${html`<div className="flex flex-wrap gap-2"><button className=${B_GHOST} onClick=${() => setCatsOpen(true)}><${Icon} name="Tags" />Categorías</button><button className=${B_PRIMARY} onClick=${() => setEdit('new')}><${Icon} name="Plus" />Agregar equipo</button></div>`} />
+    ${catsOpen && html`<${CategoriesManager} db=${db} A=${A} showToast=${showToast} onClose=${() => setCatsOpen(false)} />`}
     <div className=${cn(CARD, 'mb-4 grid grid-cols-1 gap-3 p-3 sm:grid-cols-2 xl:grid-cols-5')}>
       <div className="relative sm:col-span-2 xl:col-span-2"><span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"><${Icon} name="Search" size=${18} /></span>
         <input id="inv-q" aria-label="Buscar equipo" className=${cn(INPUT, 'pl-10')} placeholder="Buscar por nombre, marca, modelo o ID" value=${filters.q} onChange=${setF('q')} /></div>
@@ -888,7 +899,7 @@ function Phase1({ project, db, A, showToast, onNext }) {
     <div className=${cn(CARD, 'mb-4 p-4')}>
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2"><div className="lbl">Kits rápidos</div>
         <div className="flex flex-wrap gap-2"><button onClick=${() => setKitEdit({ nombre: '', icon: 'Package', ids: Object.keys(project.seleccion) })} className=${cn(B_GHOST, '!min-h-[40px] text-sm')}><${Icon} name="Plus" size=${16} />Nuevo kit</button><button onClick=${() => setManageKits(true)} className=${cn(B_GHOST, '!min-h-[40px] text-sm')}><${Icon} name="Pencil" size=${16} />Editar kits</button></div></div>
-      ${db.kits.length === 0 && html`<p className="text-sm text-slate-400">No hay kits. Crea uno nuevo o restaura los de fábrica en “Editar kits”.</p>`}
+      ${db.kits.length === 0 && html`<p className="text-sm text-slate-400">No hay kits. Crea uno nuevo en “Editar kits”.</p>`}
       <div className="grid grid-cols-1 gap-2 md:grid-cols-3">${db.kits.map((k) => html`<button key=${k.id} onClick=${() => applyKit(k)} className=${cn(B_GHOST, 'justify-start text-left')}><${Icon} name=${k.icon} className="shrink-0 text-amber-400" /><span className="min-w-0 flex-1">${k.nombre}</span><span className="num text-xs text-slate-500">${k.ids.length}</span></button>`)}</div>
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <div className="relative min-w-[200px] flex-1"><span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"><${Icon} name="Search" size=${18} /></span><input id="sel-q" aria-label="Buscar en el catálogo" className=${cn(INPUT, 'pl-10')} placeholder="Buscar en el catálogo" value=${q} onChange=${(e) => setQ(e.target.value)} /></div>
@@ -946,7 +957,6 @@ function KitsManager({ db, A, showToast, onEdit, onClose }) {
       </li>`; })}</ul>
     ${db.kits.length === 0 && html`<p className="mb-4 text-sm text-slate-400">No hay kits guardados.</p>`}
     <div className="flex flex-wrap justify-between gap-2 border-t border-slate-700 pt-4">
-      <button onClick=${() => { A.restoreDefaultKits(); showToast('Kits de fábrica restaurados'); }} className=${B_GHOST}><${Icon} name="RotateCcw" size=${16} />Restaurar kits de fábrica</button>
       <button onClick=${() => onEdit({ nombre: '', icon: 'Package', ids: [] })} className=${B_PRIMARY}><${Icon} name="Plus" size=${16} />Nuevo kit</button>
     </div>
   <//>`;
@@ -1127,7 +1137,7 @@ function ProjectDetail({ project, db, A, phase, setPhase, back, showToast }) {
 
 /* ---------- RESPALDO ---------- */
 function DataModal({ db, onClose, A, showToast, S }) {
-  const json = useMemo(() => JSON.stringify({ app: 'inventario-rodaje', version: 1, exportadoEn: new Date().toISOString(), inventory: db.inventory, projects: db.projects, loans: db.loans, personas: db.personas, casas: db.casas, kits: db.kits }, null, 2), [db]);
+  const json = useMemo(() => JSON.stringify({ app: 'inventario-rodaje', version: 1, exportadoEn: new Date().toISOString(), inventory: db.inventory, projects: db.projects, loans: db.loans, personas: db.personas, casas: db.casas, kits: db.kits, categorias: db.categorias, yo: db.yo }, null, 2), [db]);
   const ta = useRef(null);
   const [paste, setPaste] = useState('');
   const [err, setErr] = useState('');
@@ -1175,15 +1185,18 @@ function DataModal({ db, onClose, A, showToast, S }) {
       <p className="mb-3 text-sm text-slate-400">Copia este texto y guárdalo en un archivo .json (Notas, Drive o correo). Incluye inventario, proyectos, préstamos y kits rápidos.</p>
       <textarea ref=${ta} readOnly rows="6" value=${json} onFocus=${(e) => e.target.select()} aria-label="Respaldo JSON" className=${cn(INPUT, 'font-mono text-xs')}></textarea>
       <div className="mt-3 flex justify-end"><button onClick=${copy} className=${B_PRIMARY}><${Icon} name="Copy" />Copiar respaldo</button></div></section>
+    <section className="mb-6 border-t border-slate-700 pt-5"><h3 className="mb-1 font-display text-xl font-semibold uppercase">Tu nombre</h3>
+      <p className="mb-3 text-sm text-slate-400">Es el nombre con el que apareces como dueño de tus equipos (se usa para saber cuáles tienes tú y cuáles un socio). Se llena solo con tu primer equipo; aquí puedes cambiarlo.</p>
+      <input aria-label="Tu nombre" className=${INPUT} defaultValue=${db.yo} onBlur=${(e) => { if (e.target.value.trim() !== (db.yo || '')) { A.setYo(e.target.value); showToast('Nombre guardado'); } }} placeholder="Tu nombre" /></section>
     <section className="mb-6 border-t border-slate-700 pt-5"><h3 className="mb-1 font-display text-xl font-semibold uppercase">Importar respaldo (JSON)</h3>
       <p className="mb-3 text-sm text-slate-400">Reemplaza todos los datos actuales (y los de la nube si tienes sesión iniciada). Elige un archivo o pega el texto.</p>
       <input id="imp-file" type="file" accept=".json,application/json,text/plain" onChange=${onFile} aria-label="Archivo de respaldo" className="mb-3 block w-full text-sm text-slate-300 file:mr-3 file:min-h-[44px] file:rounded-md file:border-0 file:bg-slate-700 file:px-4 file:font-semibold file:text-slate-100" />
       <textarea id="imp-paste" rows="4" value=${paste} onChange=${(e) => { setPaste(e.target.value); setErr(''); }} placeholder="O pega aquí el JSON del respaldo" className=${cn(INPUT, 'font-mono text-xs')}></textarea>
       ${err && html`<p className="mt-2 rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">${err}</p>`}
       <div className="mt-3 flex justify-end"><button disabled=${!paste.trim()} onClick=${() => doImport(paste)} className=${B_GHOST}><${Icon} name="Upload" />Importar texto pegado</button></div></section>
-    <section className="border-t border-slate-700 pt-5"><h3 className="mb-1 font-display text-xl font-semibold uppercase">Restaurar datos de fábrica</h3>
-      <p className="mb-3 text-sm text-slate-400">Vuelve a los 31 equipos originales y borra proyectos y cambios. Si tienes sesión iniciada, también se reemplaza en la nube. Exporta un respaldo antes.</p>
-      ${confirmReset ? html`<div className="flex flex-wrap gap-2"><button onClick=${() => { A.replaceAll(freshDb()); showToast('Datos de fábrica restaurados'); onClose(); }} className=${B_DANGER}>Sí, borrar todo y restaurar</button><button onClick=${() => setConfirmReset(false)} className=${B_GHOST}>Cancelar</button></div>` : html`<button onClick=${() => setConfirmReset(true)} className=${B_DANGER}><${Icon} name="RotateCcw" />Restaurar datos de fábrica</button>`}</section>
+    <section className="border-t border-slate-700 pt-5"><h3 className="mb-1 font-display text-xl font-semibold uppercase">Vaciar todos los datos</h3>
+      <p className="mb-3 text-sm text-slate-400">Deja la app completamente en blanco: borra equipos, proyectos, préstamos y kits. Si tienes sesión iniciada, también se vacía en la nube. Exporta un respaldo antes.</p>
+      ${confirmReset ? html`<div className="flex flex-wrap gap-2"><button onClick=${() => { A.replaceAll(freshDb()); showToast('Datos vaciados'); onClose(); }} className=${B_DANGER}>Sí, borrar todo</button><button onClick=${() => setConfirmReset(false)} className=${B_GHOST}>Cancelar</button></div>` : html`<button onClick=${() => setConfirmReset(true)} className=${B_DANGER}><${Icon} name="RotateCcw" />Restaurar datos de fábrica</button>`}</section>
   <//>`;
 }
 
@@ -1196,8 +1209,10 @@ const SYNC_UI = {
   error: { text: '🔴 Error de sincronización', cls: 'border-red-500/50 bg-red-500/10 text-red-300' },
 };
 function CloudBar({ status, user, msg, onOpen }) {
+  const hubBtn = HUB.url ? html`<a href=${HUB.url} className=${cn(B_GHOST, '!min-h-[40px] mr-auto text-sm no-underline')}><${Icon} name="ArrowLeft" size=${16} />${HUB.name}</a>` : null;
   const s = SYNC_UI[status] || SYNC_UI.local;
   return html`<div className="mb-4 flex flex-wrap items-center justify-end gap-2" role="region" aria-label="Sincronización en la nube">
+    ${hubBtn}
     <span role="status" aria-live="polite" className=${cn('inline-flex min-h-[40px] items-center rounded-full border px-3 text-xs font-semibold', s.cls)}>${s.text}</span>
     <button onClick=${onOpen} className=${cn(user ? B_GHOST : B_PRIMARY, '!min-h-[40px] text-sm')}><${Icon} name=${user ? 'User' : 'LogIn'} size=${16} />${user ? 'Mi cuenta' : 'Iniciar Sesión / Sincronizar'}</button>
     ${status === 'error' && msg && html`<p className="w-full text-right text-xs text-red-300">${msg}</p>`}
@@ -1223,6 +1238,12 @@ function AuthModal({ user, fbState, status, msg, onClose, onOut, showToast }) {
       onClose();
     } catch (x) { setErr(authMsg(x)); setBusy(false); }
   };
+  const google = async () => {
+    if (!window.FB) return setErr('Firebase todavía no está disponible.');
+    setBusy(true); setErr('');
+    try { const r = await window.FB.google(); if (r === 'redirect') return; showToast('Sesión iniciada. Sincronizando…'); onClose(); }
+    catch (x) { setErr(authMsg(x)); setBusy(false); }
+  };
   if (user) return html`<${Modal} title="Cuenta y nube" onClose=${onClose}>
     <div className="flex flex-col gap-4">
       <div className=${cn(CARD, 'p-4')}><div className="lbl mb-1">Sesión iniciada como</div><div className="break-all font-mono text-base text-slate-100">${user.email}</div></div>
@@ -1234,6 +1255,8 @@ function AuthModal({ user, fbState, status, msg, onClose, onOut, showToast }) {
   return html`<${Modal} title="Cuenta y nube" onClose=${onClose}>
     <form onSubmit=${submit} className="flex flex-col gap-4">
       <p className="text-sm text-slate-400">Inicia sesión para sincronizar el inventario entre tu celular y tu computadora. La primera vez en un dispositivo, si la nube aún está vacía, se suben los datos que ya tienes aquí.</p>
+      <button type="button" onClick=${google} disabled=${busy || fbState !== 'ready'} className="inline-flex min-h-[48px] items-center justify-center gap-3 rounded-md bg-white px-4 text-sm font-semibold text-slate-800 hover:bg-slate-100 disabled:opacity-50"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.5-.8-3-.8-4.7s.3-3.2.8-4.7l-7.9-6.1C.9 16.4 0 20.1 0 24s.9 7.6 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.8 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>Continuar con Google</button>
+      <div className="flex items-center gap-3 text-xs text-slate-500" aria-hidden="true"><span className="h-px flex-1 bg-slate-700"></span>o con correo<span className="h-px flex-1 bg-slate-700"></span></div>
       <div className="grid grid-cols-2 gap-2" role="group" aria-label="Modo de acceso">
         ${[['login', 'Iniciar Sesión'], ['signup', 'Crear Cuenta']].map(([k, l]) => html`<button key=${k} type="button" onClick=${() => { setMode(k); setErr(''); }} aria-pressed=${mode === k} className=${cn('min-h-[48px] rounded-md border-2 px-2 text-sm font-semibold', mode === k ? 'border-amber-500 bg-amber-500 text-slate-950' : 'border-slate-600 text-slate-300 hover:bg-slate-700/60')}>${l}</button>`)}
       </div>
@@ -1249,6 +1272,7 @@ function AuthModal({ user, fbState, status, msg, onClose, onOut, showToast }) {
 /* ---------- APP ---------- */
 function App() {
   const [db, setDb] = useState(loadDb);
+  ME = db.yo || '';
   const [nav, setNav] = useState({ view: 'dash', projectId: null, phase: 1 });
   const [filters, setFilters] = useState({ q: '', cat: '', estado: '', prop: '' });
   const [edit, setEdit] = useState(null);
@@ -1296,7 +1320,10 @@ function App() {
 
   useEffect(() => {
     if (fbState !== 'ready') return undefined;
-    return window.FB.onAuth((u) => setUser(u ? { uid: u.uid, email: u.email || '' } : null));
+    return window.FB.onAuth((u) => {
+      setUser(u ? { uid: u.uid, email: u.email || '' } : null);
+      if (!u && HUB.required && HUB.url) location.replace(HUB.url + (HUB.url.includes('?') ? '&' : '?') + 'next=' + encodeURIComponent(location.href));
+    });
   }, [fbState]);
 
   // Escucha en vivo el documento users/{uid}
@@ -1345,7 +1372,11 @@ function App() {
   const A = {
     updateItem: (id, patch) => setDb((d) => ({ ...d, inventory: d.inventory.map((i) => (i.id === id ? { ...i, ...patch } : i)) })),
     setEstado: (id, estado) => setDb((d) => ({ ...d, inventory: d.inventory.map((i) => (i.id === id ? { ...i, estado } : i)) })),
-    addItem: (it) => setDb((d) => ({ ...d, inventory: [...d.inventory, it] })),
+    addItem: (it) => setDb((d) => ({ ...d, inventory: [...d.inventory, it], yo: d.yo || (it.duenos && it.duenos[0] && it.tipoProp !== 'prestamo' ? it.duenos[0].nombre : '') })),
+    setYo: (n) => setDb((d) => { const yo = String(n || '').replace(/\s+/g, ' ').trim(); return { ...d, yo, personas: yo && !d.personas.some((x) => normName(x) === normName(yo)) ? [...d.personas, yo] : d.personas }; }),
+    addCategoria: (n) => setDb((d) => { const c = String(n || '').replace(/\s+/g, ' ').trim(); return !c || d.categorias.some((x) => normName(x) === normName(c)) ? d : { ...d, categorias: [...d.categorias, c] }; }),
+    deleteCategoria: (c) => setDb((d) => ({ ...d, categorias: d.categorias.filter((x) => x !== c) })),
+    renameCategoria: (o, n) => setDb((d) => { const c = String(n || '').replace(/\s+/g, ' ').trim(); if (!c || c === o || d.categorias.some((x) => x !== o && normName(x) === normName(c))) return d; return { ...d, categorias: d.categorias.map((x) => (x === o ? c : x)), inventory: d.inventory.map((i) => (i.categoria === o ? { ...i, categoria: c } : i)), projects: d.projects.map((p) => ({ ...p, renta: (p.renta || []).map((r) => (r.categoria === o ? { ...r, categoria: c } : r)) })) }; }),
     deleteItem: (id) => setDb((d) => ({ ...d, inventory: d.inventory.filter((i) => i.id !== id) })),
     resolveItem: (id) => setDb((d) => ({ ...d, inventory: d.inventory.map((i) => (i.id === id ? { ...i, mant: '', estado: i.estado === E_REV ? E_HOME : i.estado } : i)) })),
     setHolder: (id, who) => setDb((d) => ({ ...d, inventory: d.inventory.map((i) => (i.id === id ? { ...i, estado: who === 'socio' ? E_PARTNER : (i.estado === E_PARTNER ? E_HOME : i.estado) } : i)) })),
@@ -1359,8 +1390,7 @@ function App() {
     syncProject: (id, close) => setDb((d) => applySync(d, id, close)),
     saveKit: (k) => setDb((d) => ({ ...d, kits: d.kits.some((x) => x.id === k.id) ? d.kits.map((x) => (x.id === k.id ? k : x)) : [...d.kits, k] })),
     deleteKit: (id) => setDb((d) => ({ ...d, kits: d.kits.filter((x) => x.id !== id) })),
-    restoreDefaultKits: () => setDb((d) => ({ ...d, kits: [...d.kits.filter((x) => !DEFAULT_KITS.some((k) => k.id === x.id)), ...defaultKits()] })),
-    replaceAll: (n) => { setDb(n); setNav({ view: 'dash', projectId: null, phase: 1 }); },
+        replaceAll: (n) => { setDb(n); setNav({ view: 'dash', projectId: null, phase: 1 }); },
   };
 
   const withTimeout = (p) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej({ code: 'unavailable' }), 15000))]);
@@ -1395,7 +1425,7 @@ function App() {
 
   return html`<div className="lg:flex lg:items-start lg:gap-8">
     <aside className="sticky top-4 hidden w-56 shrink-0 flex-col gap-5 lg:flex">
-      <div><div className="clap mb-3 h-2 w-16"></div><div className="font-display text-3xl font-bold uppercase leading-none">Inventario<br />de rodaje</div><div className="lbl mt-2">Tai · BMPCC 4K</div></div>
+      <div><div className="clap mb-3 h-2 w-16"></div><div className="font-display text-3xl font-bold uppercase leading-none">Inventario<br />de rodaje</div><div className="lbl mt-2">${db.yo || 'LOPsar Gear'}</div></div>
       <nav className="flex flex-col gap-1" aria-label="Principal">${tabs.map((t) => html`<button key=${t.id} onClick=${() => go(t.id)} aria-current=${activeTab === t.id ? 'page' : undefined} className=${cn('flex min-h-[48px] items-center gap-3 rounded-md px-3 text-left font-semibold transition-colors', activeTab === t.id ? 'bg-amber-500 text-slate-950' : 'text-slate-300 hover:bg-slate-800')}><${Icon} name=${t.icon} />${t.label}</button>`)}</nav>
       <div className="flex flex-col gap-2 border-t border-slate-700 pt-4">
         <button onClick=${() => setDataOpen(true)} className=${cn(B_GHOST, 'justify-start')}><${Icon} name="Database" size=${16} />Respaldo de datos</button>
@@ -1462,10 +1492,15 @@ try {
     signUp: (email, pass) => authM.createUserWithEmailAndPassword(auth, email, pass),
     signIn: (email, pass) => authM.signInWithEmailAndPassword(auth, email, pass),
     signOut: () => authM.signOut(auth),
+    google: async () => {
+      const p = new authM.GoogleAuthProvider(); p.setCustomParameters({ prompt: "select_account" });
+      try { await authM.signInWithPopup(auth, p); return "ok"; }
+      catch (e) { if (e && (e.code === "auth/popup-blocked" || e.code === "auth/operation-not-supported-in-this-environment")) { await authM.signInWithRedirect(auth, p); return "redirect"; } throw e; }
+    },
     watch: (uid, onOk, onErr) => fsM.onSnapshot(ref(uid), { includeMetadataChanges: true }, onOk, onErr),
     get: (uid) => fsM.getDoc(ref(uid)),
     save: (uid, data, writer, stamp) => {
-      const clean = JSON.parse(JSON.stringify({ inventory: data.inventory, projects: data.projects, loans: data.loans, personas: data.personas, casas: data.casas, kits: data.kits }));
+      const clean = JSON.parse(JSON.stringify({ inventory: data.inventory, projects: data.projects, loans: data.loans, personas: data.personas, casas: data.casas, kits: data.kits, categorias: data.categorias, yo: data.yo }));
       const payload = Object.assign(clean, { writer: writer, stamp: stamp, updatedAt: Date.now() });
       if (new Blob([JSON.stringify(payload)]).size > 1000000) return Promise.reject({ code: "too-big" });
       return fsM.setDoc(ref(uid), payload);
