@@ -141,7 +141,7 @@ function loadDb() {
 
 /* ---------- Nube (Firebase): utilidades ---------- */
 /* Hub: pon aquí la dirección de tu página principal. required:true obliga a iniciar sesión en el hub. */
-const HUB = { url: 'https://lopsar.github.io/LOPsarHub/', required: false, name: 'Hub' };
+const HUB = { url: 'https://lopsar.github.io/LOPsarHub/', required: true, name: 'Hub' };
 const DEVICE_KEY = KEY + '.device';
 const DEVICE = (() => { try { let d = localStorage.getItem(DEVICE_KEY); if (!d) { d = 'dev-' + uid() + uid(); localStorage.setItem(DEVICE_KEY, d); } return d; } catch (e) { return 'dev-' + uid() + uid(); } })();
 const coreDb = (d) => ({ inventory: d.inventory, projects: d.projects, loans: d.loans, personas: d.personas, casas: d.casas, kits: d.kits, categorias: d.categorias, yo: d.yo });
